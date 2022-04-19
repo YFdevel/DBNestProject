@@ -1,0 +1,131 @@
+{{#if result}}
+<div class="cards-wrapper">
+    <div class="card">
+        <div class="card-content">
+            <h5 class="card-title">{{result.title}}</h5>
+            <h6 class="card-subtitle mb-2 text-muted"> Автор: {{result.user.firstName}}
+            </h6>
+            <h6 class="card-subtitle mb-2 text-muted"> Дата создания: {{result.createdAt}}
+            </h6>
+            <p class="card-text">{{result.description}}</p>
+        </div>
+        <div id="app">
+            <div class="card-comments">
+                <h3 class="text-center">${ titleChat }</h3>
+                <div id="chat">
+                    <div class="card-message">
+                        <div id="messages" class="card-block">
+                            <ul>
+                                <li v-for="message of messages">${ message.name }: ${ message.text }</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <br>
+                    <textarea id="textarea" class="textarea" v-model="text" placeholder="Сообщение..."></textarea>
+                    <br>
+                    <button id="send-message" class="btn" @click.prevent="sendMessage">Отправить сообщение</button>
+                </div>
+            </div>
+            <div class="card-comments">
+                <h3 class="text-center">${ titleComment }</h3>
+
+                <div id="comments">
+                    <div class="card-comments">
+                        <div id="comments" class="card-block">
+                            <ul>
+                                <li v-for="comment of comments">
+{{!--                              <div class="card-img"> --}}
+{{!--                                 <img class="img-comment" v-bind:src='"http://127.0.0.1:3000/uploads/"+comment.avatar'/> --}}
+{{!--                                 </div> --}}
+                                ${ comment.user.firstName }: ${ comment.text }
+
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <br>
+                        <textarea id="textarea" class="textarea" v-model="comment" placeholder="Сообщение..."></textarea>
+{{!--                         <label for="file" class="label">Загрузить аватарку</label> --}}
+{{!--                         <input type="file" id="file" v-model="comment" name="file" /><br> --}}
+                        <button id="send-comment" class="btn" @click.prevent="sendComment">Отправить комментарий</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{else}}
+    <h1>Запрашиваемый пост отсутствует!</h1>
+    {{/if}}
+    <script>
+        const app = new Vue({
+            delimiters: ['${', '}'],
+            el: '#app',
+            data: {
+                titleChat: 'Чат',
+                titleComment: 'Комментарии',
+                userId: new URLSearchParams(window.location.search.substring(1)).get("userId"),
+                postId: new URLSearchParams(window.location.search.substring(1)).get("postId"),
+                name: '',
+                text: '',
+                messages: [],
+                comment: '',
+                comments: [],
+                avatar: '',
+                socket: null
+            },
+            methods: {
+                sendMessage() {
+                    if (this.validateInputMessage()) {
+                        const message = {
+                            userId: this.userId,
+                            text: this.text
+                        }
+                        this.socket.emit('msgToServer', message)
+                        this.text = ''
+                    }
+                },
+                sendComment() {
+                    if (this.validateInputComment()) {
+                        const comment = {
+                            userId: this.userId,
+                            postId:this.postId,
+                            text: this.comment,
+                            avatar:""
+                        }
+                        this.socket.emit('commentToServer', comment)
+                        this.comment = ''
+                    }
+                },
+                setInitialComments(comments) {
+                    this.comments = comments;
+                },
+                receivedMessage(message) {
+                    this.messages.push(message)
+                },
+                receivedComment(comment) {
+                    this.comments.push(comment)
+                },
+                validateInputMessage() {
+                    return this.text.length > 0
+                },
+                validateInputComment() {
+                    return this.comment.length > 0
+                }
+            },
+            created() {
+                this.socket = io('http://localhost:3000');
+                this.socket.emit('postIdToServer', this.postId);
+
+                this.socket.on('initialComments', (comments) => {
+                    this.setInitialComments(comments)
+                })
+
+
+                this.socket.on('msgToClient', (message) => {
+                    this.receivedMessage(message)
+                })
+                this.socket.on('commentToClient', (comment) => {
+                    this.receivedComment(comment)
+                })
+            }
+        })
+    </script>

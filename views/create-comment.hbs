@@ -1,0 +1,20 @@
+<div class="card">
+    <div class="card-comments">
+     <h2>Создайте комментарий для поста № {{showId}}</h2>
+         <iframe width="0" height="0" border="0" name="dummyframe" id="dummyframe"></iframe>
+            <form id="upload-form" class="upload-form" method="post" enctype="multipart/form-data" target="dummyframe"
+            action="http://127.0.0.1:3000/comments/upload?id={{showId}}">
+             <input type="hidden" name="userId" value="1"/>
+             <input type="hidden" name="postId" value="{{showId}}"/>
+            <textarea name="text" class="textarea"></textarea>
+            <label for="file" class="label">Загрузить аватарку</label>
+            <input type="file" id ="file" name="file"/><br>
+            <button type="submit">Создать</button>
+            </form>
+        </div>
+        </div>
+
+
+
+
+

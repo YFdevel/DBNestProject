@@ -1,0 +1,26 @@
+{{#if result}}
+<div class="card">
+    <div class="card-content">
+    <p class="card-text">{{result.firstName}}</p>
+    <p class="card-text">{{result.lastName}}</p>
+    <p class="card-text">{{result.email}}</p>
+    </div>
+         <iframe width="0" height="0" border="0" name="dummyframe" id="dummyframe"></iframe>
+            <form class="upload-form" method="put" enctype="application/json" target="dummyframe"
+            action="http://127.0.0.1:3000/users/update?id={{result.id}}">
+            <p>Изменить данные пользователя</p>
+            <input type="text" name="firstName" placeholder="Name"/>
+            <input  type="text" name="lastName" placeholder="Фамилия"/>
+            <input  type="text" name="email" placeholder="Email"/>
+            <input  type="password" name="password" placeholder="Пароль"/>
+            <input  type="hidden" name="tokenForm" value="{{lastToken result.sessions}}"/>
+            <button type="submit">Изменить</button>
+            </form>
+        </div>
+{{else}}
+<h1>Данный пользователь отсутствует в базе!</h1>
+{{/if}}
+
+
+
+
