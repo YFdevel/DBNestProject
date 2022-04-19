@@ -1,0 +1,45 @@
+{{#if result}}
+<div class="cards-wrapper">
+<div class="card">
+    <div class="card-content">
+    <h5 class="card-title">{{result.title}}</h5>
+    <h6 class="card-subtitle mb-2 text-muted"> Автор: {{result.user.firstName}}
+    </h6>
+    <h6 class="card-subtitle mb-2 text-muted"> Дата создания: {{result.createdAt}}
+    </h6>
+    <p class="card-text">{{result.description}}</p>
+    </div>
+    <div class="card-comments">Комментарии
+    {{#if result.comments}}
+    {{#each result.comments}}
+        <div class="comment-item">
+        <div class="card-img">
+        <img src="http://127.0.0.1:3000/uploads/{{this.avatar}}">
+        </div>
+        <p class="card-text">{{this.text}}</p>
+        <h6 class="card-subtitle mb-2 text-muted"> Дата создания: {{this.createdAt}}</h6>
+        </div>
+        {{/each}}
+        {{else}}
+        <p>Комментариев нет</p>
+        {{/if}}
+        </div>
+         <iframe width="0" height="0" border="0" name="dummyframe" id="dummyframe"></iframe>
+            <form class="upload-form" method="post" enctype="multipart/form-data" target="dummyframe"
+            action="http://127.0.0.1:3000/comments/upload?id={{result.id}}">
+            <p>Создайте комментарий</p>
+            <input type="hidden" name="userId" value="1"/>
+            <input type="hidden" name="postId" value="{{result.id}}"/>
+            <textarea name="text" class="textarea"></textarea>
+            <label for="file" class="label">Загрузить аватарку</label>
+            <input type="file" id ="file" name="file"/><br>
+            <button type="submit">Создать</button>
+            </form>
+        </div>
+{{else}}
+<h1>Запрашиваемый пост отсутствует!</h1>
+{{/if}}
+
+
+
+

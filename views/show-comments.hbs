@@ -1,0 +1,21 @@
+        <div class="card-comments">
+         Комментарии
+        {{#if result}}
+       {{#each result}}
+        <div class="comment-item">
+        <div class="card-img">
+        <img src="http://127.0.0.1:3000/uploads/{{avatar}}">
+        </div>
+        <p class="card-text">{{text}}</p>
+        <h6 class="card-subtitle mb-2 text-muted"> Дата создания: {{createdAt}}</h6>
+        </div>
+        {{/each}}
+        {{else}}
+        <p>Комментариев нет</p>
+        {{/if}}
+        </div>
+
+
+
+
+
